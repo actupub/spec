@@ -26,8 +26,6 @@ Voici les constats qui ont rendu ce projet nécessaire :
 
 7. La découvrabilité est absente du RSS : il n'existe aucun mécanisme natif pour trouver des articles intéressants publiés par des blogs qu'on ne suit pas encore, sauf s'ils sont explicitement mentionnés dans un article qu'on a déjà lu.
 
----
-
 ## Valeurs
 
 Ce projet est conduit avec des convictions importantes :
@@ -39,8 +37,6 @@ Ce projet est conduit avec des convictions importantes :
 - **Le lien humain au cœur du partage** : Les recommandations devraient venir d'êtres humains qui ont jugé une information par eux-mêmes et souhaitent la partager à ceux qui les suivent — pas d'un algorithme optimisant des intérêts opaques. La liberté de partager ne se résume pas à la possibilité technique de le faire : c'est aussi la possibilité de le faire vertueusement, pour des raisons qui tiennent à la qualité de l'information plutôt qu'à l'intérêt de la plateforme.
 
 - **La connaissance doit circuler librement** : Le partage d'information est essentiel à la vie en société. Ce droit doit être durable et résilient face au capitalisme de l'information. Une information jugée de qualité doit pouvoir se repartager facilement. Toutes personnes compétentes doit pouvoir la repartager sans dépendre de plateformes fermées.
-
----
 
 ## Ambitions
 
@@ -65,8 +61,6 @@ Nous espérons ainsi :
 - Permettre le suivi d'actualité sans identification ni surveillance ;
 
 - Améliorer la visibilité des articles qui le méritent grâce à la sélection et au repartage communautaire.
-
----
 
 ## Le projet
 
