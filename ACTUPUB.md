@@ -10,9 +10,9 @@
 2. [Vocabulaire](#2-vocabulaire)
 3. [Format de base : JSON Feed 1.1 + extension `_actupub`](#3-format-de-base--json-feed-11--extension-_actupub)
 4. [Schéma des objets](#4-schéma-des-objets)
-5. [Couche 1 — Découverte](#5-couche-1--découverte)
-6. [Couche 2 — Flux et administration](#6-couche-2--flux-et-administration)
-7. [Couche 3 — Flux temps réel (SSE, optionnel)](#7-couche-3--flux-temps-réel-sse-optionnel)
+5. [Couche 1 : Découverte](#5-couche-1--découverte)
+6. [Couche 2 : Flux et administration](#6-couche-2--flux-et-administration)
+7. [Couche 3 : Flux temps réel (SSE, optionnel)](#7-couche-3--flux-temps-réel-sse-optionnel)
 8. [Déduplication et référence officielle](#8-déduplication-et-référence-officielle)
 9. [Confiance, validation humaine et publication](#9-confiance-validation-humaine-et-publication)
 10. [Catégories](#10-catégories)
@@ -30,15 +30,15 @@
 
 ActuPub est un protocole de syndication d'articles conçu pour deux usages simultanés :
 
-- **Instance → instance** : une instance peut s'abonner au flux d'une autre instance, avec des filtres fins (étiquettes, langue, densité, NSFW), ingérer les références dans sa propre base, et les repartager dans son propre flux — sous réserve de validation humaine ou automatique selon le niveau de confiance configuré.
+- **Instance → instance** : une instance peut s'abonner au flux d'une autre instance, avec des filtres fins (étiquettes, langue, densité, NSFW), ingérer les références dans sa propre base, et les repartager dans son propre flux, sous réserve de validation humaine ou automatique selon le niveau de confiance configuré.
 - **Instance → lecteur** : un lecteur peut s'abonner directement à un flux ActuPub, avec des paramètres de filtre bien plus expressifs qu'un flux RSS ou Atom classique.
 
-ActuPub est pensé comme un **successeur naturel de RSS et Atom**, ajoutant la fédération inter-instances, des métadonnées structurées, un mécanisme de validation humaine, et des filtres paramétrables — tout en restant lisible par les clients JSON Feed 1.1 existants.
+ActuPub est pensé comme un **successeur naturel de RSS et Atom**, ajoutant la fédération inter-instances, des métadonnées structurées, un mécanisme de validation humaine, et des filtres paramétrables, tout en restant lisible par les clients JSON Feed 1.1 existants.
 
 ### Ce qu'ActuPub n'est pas
 
 - **Pas un réseau social** : pas d'interactions (like, commentaire, follow au sens ActivityPub). ActuPub ne transporte que des références d'articles et leurs métadonnées.
-- **Pas un protocole push** : une instance ne pousse jamais de références à une autre de manière spontanée. Tout échange de flux est initié par une requête du consommateur — sauf le mécanisme de correction de référence officielle (voir section 8).
+- **Pas un protocole push** : une instance ne pousse jamais de références à une autre de manière spontanée. Tout échange de flux est initié par une requête du consommateur (sauf le mécanisme de correction de référence officielle, voir section 8).
 
 ### Comment les instances interagissent
 
@@ -64,7 +64,7 @@ Instance B ne reçoit que ce qu'elle demande. Instance A ne contacte jamais B sp
 
 ## 2. Vocabulaire
 
-**Article** : contenu publié sur le web par un auteur ou une organisation sur leur propre site. ActuPub ne transporte pas cet article, uniquement une référence vers lui — sauf via l'API de contenu (section 6).
+**Article** : contenu publié sur le web par un auteur ou une organisation sur leur propre site. Le flux ActuPub ne transporte pas cet article, uniquement une référence vers lui. ActuPub prévoit en revanche le transport du contenu de l'article via une API dédiée (voir section 6).
 
 **Référence** (ou référence ActuPub) : objet JSON créé par une instance ActuPub qui pointe vers un article et en décrit les métadonnées (étiquettes, densité, NSFW, etc.). Plusieurs instances peuvent créer une référence pour le même article.
 
@@ -139,7 +139,7 @@ L'objet Feed est le document racine retourné par `/actupub/feed`. Il décrit l'
 | `_actupub.discovery_url` | Raccourci vers `/.well-known/actupub` de l'instance |
 | `items` | Liste des références (objets Article, voir ci-dessous) |
 
-### Objet Article (item — la référence)
+### Objet Article (item / la référence)
 
 Chaque item de la liste `items` est une référence ActuPub : un pointeur enrichi vers un article publié ailleurs (ou sur l'instance elle-même). Les étiquettes exposées dans une référence sont **toujours celles de l'instance qui expose le flux**, appliquées via son propre mapping. Une instance ne transmet jamais une référence avec des étiquettes qu'elle n'a pas définies elle-même.
 
@@ -214,7 +214,7 @@ Le protocole définit la liste exhaustive suivante. Un client qui reçoit une va
 
 ---
 
-## 5. Couche 1 — Découverte
+## 5. Couche 1 : Découverte
 
 ### `GET /.well-known/actupub`
 
@@ -292,7 +292,7 @@ Lorsqu'une instance consommatrice rencontre une étiquette distante inconnue, el
 
 ---
 
-## 6. Couche 2 — Flux et administration
+## 6. Couche 2 : Flux et administration
 
 ### Endpoint public : `GET /actupub/feed`
 
@@ -364,17 +364,17 @@ Authorization: Bearer {jwt-token}
 }
 ```
 
-**Authentification pour les contenus payants — OAuth 2.0 + JWT Bearer**
+**Authentification pour les contenus payants : OAuth 2.0 + JWT Bearer**
 
-Pour les articles sous paywall, le site publieur protège cet endpoint avec un JWT Bearer. L'utilisateur s'authentifie sur le site du média via son propre système OAuth 2.0 (Authorization Code Flow), obtient un JWT d'accès, et le transmet dans le header `Authorization` de la requête ActuPub. Le média valide son propre token selon ses propres règles — ActuPub ne prescrit pas le serveur d'autorisation ni la gestion des comptes, qui restent entièrement sous le contrôle du publieur.
+Pour les articles sous paywall, le site publieur protège cet endpoint avec un JWT Bearer. L'utilisateur s'authentifie sur le site du média via son propre système OAuth 2.0 (Authorization Code Flow), obtient un JWT d'accès, et le transmet dans le header `Authorization` de la requête ActuPub. Le média valide son propre token selon ses propres règles. ActuPub ne prescrit pas le serveur d'autorisation ni la gestion des comptes, qui restent entièrement sous le contrôle du publieur.
 
 Ce choix est motivé par le fait que les grands médias utilisent déjà OAuth 2.0 pour leurs systèmes d'abonnement. Implémenter cet endpoint ne leur demande que d'exposer une nouvelle route protégée par leur infrastructure d'authentification existante, sans nouvel acteur dans la chaîne.
 
 ### Endpoints d'administration (authentifiés)
 
-Ces endpoints permettent à l'opérateur de gérer sa base de références. L'authentification utilise le même mécanisme que pour l'API de contenu : **OAuth 2.0 + JWT Bearer**. Le scope requis est `admin`, distinct du scope `read:content` utilisé pour la lecture d'articles payants. La sécurité de l'administration est une exigence du protocole, pas un détail d'implémentation.
+Ces endpoints permettent à l'opérateur de gérer sa base de références. L'authentification utilise le même mécanisme que pour l'API de contenu : **OAuth 2.0 + JWT Bearer**. Le scope requis est `admin`, distinct du scope `read:content` utilisé pour la lecture d'articles payants.
 
-**`POST /actupub/admin/articles`** — Ajouter une référence manuellement
+**`POST /actupub/admin/articles`** : Ajouter une référence manuellement
 
 Avant de remplir le formulaire de création, le client doit vérifier si une référence officielle existe déjà pour l'URL saisie (via le mécanisme de découverte décrit en section 8) et pré-remplir les champs disponibles. L'opérateur peut ensuite modifier ou compléter les métadonnées avant soumission.
 
@@ -414,7 +414,7 @@ Corps de la requête (tous les champs configurables) :
 
 Un article ajouté manuellement est publié directement dans le flux, sans passer par la file de validation.
 
-**`PATCH /actupub/admin/articles/{encoded-id}`** — Modifier une référence existante
+**`PATCH /actupub/admin/articles/{encoded-id}`** : Modifier une référence existante
 
 La requête suit le même format que `POST`, en n'incluant que les champs à modifier (patch partiel). Tous les champs sont optionnels.
 
@@ -426,13 +426,13 @@ La requête suit le même format que `POST`, en n'incluant que les champs à mod
 }
 ```
 
-**`DELETE /actupub/admin/articles/{encoded-id}`** — Supprimer une référence
+**`DELETE /actupub/admin/articles/{encoded-id}`** : Supprimer une référence
 
 Supprime la référence de la base locale. L'article n'apparaît plus dans le flux. Cet événement est propagé aux instances abonnées via SSE si la couche 3 est active.
 
 ---
 
-## 7. Couche 3 — Flux temps réel (SSE, optionnel)
+## 7. Couche 3 : Flux temps réel (SSE, optionnel)
 
 **Cette couche est optionnelle et désactivée par défaut.** Un pull régulier (toutes les 15 minutes à 1 heure selon la fréquence de publication de la source) est suffisant dans la grande majorité des cas d'usage. Elle n'est pas prioritaire pour la v1 et sera spécifiée en détail dans une version ultérieure.
 
@@ -599,7 +599,7 @@ Le protocole **recommande fortement** que les articles exprimant une position po
 Les embeddings servent deux usages dans ActuPub :
 
 1. **Étiquettes** : mesure de similarité sémantique entre étiquettes d'instances différentes, pour générer automatiquement des mappings lors de la fédération.
-2. **Articles** : filtrage sémantique — diversifier les articles, détecter les doublons sémantiques même si les `id` sont différents, regrouper des sujets connexes.
+2. **Articles** : filtrage sémantique pour diversifier ou restreindre les articles, détecter les doublons sémantiques même si les `id` sont différents, regrouper des sujets connexes.
 
 ### Modèle standard
 
@@ -609,14 +609,14 @@ Le protocole spécifie un modèle de référence unique pour garantir l'interop�
 
 - 384 dimensions (environ 1,5 Ko par vecteur en float32)
 - Multilingue nativement (50+ langues)
-- Optimisé pour l'inférence CPU — ne nécessite pas de GPU
+- Optimisé pour l'inférence CPU (ne nécessite pas de GPU)
 - Open source, déployable localement sans API externe
 
 Les embeddings produits par ce modèle sont directement comparables entre instances, condition nécessaire au mapping automatique inter-instances.
 
 ### Endpoints
 
-**`GET /actupub/article/{encoded-id}/embedding`** — Embedding d'un article
+**`GET /actupub/article/{encoded-id}/embedding`** : Embedding d'un article
 
 ```json
 {
@@ -627,7 +627,7 @@ Les embeddings produits par ce modèle sont directement comparables entre instan
 }
 ```
 
-**`GET /actupub/tags/{tag-id}/embedding`** — Embedding d'une étiquette
+**`GET /actupub/tags/{tag-id}/embedding`** : Embedding d'une étiquette
 
 ```json
 {
@@ -648,21 +648,14 @@ Le champ `_actupub.nsfw` est **obligatoire** dans tout objet article. Une instan
 
 ---
 
-## 13. Hors scope v1
-
-- **Versioning du protocole** : négociation de version entre instances de spec différentes, à traiter en version future.
-- **SSE — Couche 3** : format détaillé des événements, rétention du journal, reconnexion. À traiter en version future.
-
----
-
-## 14. Fondements techniques
+## 13. Fondements techniques
 
 | Aspect | Standard réutilisé | Usage dans ActuPub |
 |---|---|---|
 | Format de sérialisation | JSON Feed 1.1 | Base + extension `_actupub` |
 | Mécanisme d'extension | Préfixe `_` de JSON Feed 1.1 | Champs `_actupub` ignorés par clients standard |
 | Transport | HTTP/HTTPS | Universel |
-| Flux temps réel | SSE — W3C Server-Sent Events | Couche 3 (optionnelle, version future) |
+| Flux temps réel | SSE -- W3C Server-Sent Events | Couche 3 (optionnelle, version future) |
 | Découverte | RFC 8615 (`/.well-known/`) | Endpoint `/.well-known/actupub` |
 | Identifiants globaux | URLs canoniques | `id` = URL nettoyée de l'article source |
 | Auth contenu payant | OAuth 2.0 + JWT Bearer | Authorization Code Flow côté publieur |
@@ -671,7 +664,7 @@ Le champ `_actupub.nsfw` est **obligatoire** dans tout objet article. Une instan
 
 ---
 
-## 15. Ce qui reste à spécifier
+## 14. Ce qui reste à spécifier
 
 **À traiter en priorité avant implémentation :**
 
