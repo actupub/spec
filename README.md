@@ -6,7 +6,7 @@ ActuPub est un protocole de syndication d'articles conçu comme l'évolution nat
 
 2. **La fédération native** : la consommation et le repartage d'articles sont au cœur du protocole, pas une fonctionnalité.
 
-> ⚠️ Brouillon : Ce document est en cours de conception et n'est pas encore prêt pour une implémentation. Des points restent à préciser. Si vous souhaitez contribuer à la suite (pour affiner la spec, implémenter une première version, ou simplement poser des questions) n'hésitez pas à me contacter ([Stoat (ex Revolt)](https://rvlt.gg/n4HQA97B)).
+> ⚠️ Brouillon : Ce document est en cours de conception et n'est pas encore prêt pour une implémentation. Des points restent à préciser. Si vous souhaitez contribuer à la suite (pour affiner la spec, implémenter une première version, ou simplement poser des questions) n'hésitez pas à me contacter ([Matrix)](https://matrix.to/#/#ActuPub:matrix.org)).
 
 ## Motivation
 
